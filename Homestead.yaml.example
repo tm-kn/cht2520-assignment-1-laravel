@@ -13,6 +13,7 @@ sites:
     -
         map: homestead.test
         to: /home/vagrant/code/public
+        php: "7.2"
 databases:
     - homestead
 name: timetracker
