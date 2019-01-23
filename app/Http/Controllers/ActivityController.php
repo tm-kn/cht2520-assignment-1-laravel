@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FilterActivity;
 use App\Http\Requests\StoreActivity;
 use App\Activity;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ActivityController extends Controller
 {
@@ -18,11 +20,56 @@ class ActivityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(FilterActivity $request)
     {
+        $validated = $request->validated();
+        $startDate = Carbon::today()->subDays(7);
+        if(array_key_exists('start_date', $validated)) {
+            $startDate = new Carbon($validated['start_date']);
+        }
+
+        $endDate = Carbon::today();
+        if(array_key_exists('end_date', $validated)) {
+            $endDate = new Carbon($validated['end_date']);
+        }
+
+        $searchQuery = [];
+        if(array_key_exists('search_query', $validated)) {
+            $searchQuery = explode(" ", $validated['search_query']);
+        }
+
         $userId = $request->user()->id;
+
+        $startDate->startOfDay();
+        $endDate->endOfDay();
+        if ($startDate > $endDate) {
+            $tmpStartDate = $startDate;
+            $startDate = $endDate;
+            $endDate = $tmpStartDate;
+        }
+
+        $activities = Activity::whereUserId($userId)
+            ->orderBy('start_datetime', 'desc')
+            ->where('start_datetime', '>=', $startDate->startOfDay())
+            ->where('end_datetime', '<=', $endDate->endOfDay());
+
+        if($searchQuery) {
+            $activities->where(function($query) use ($searchQuery) {
+                foreach($searchQuery as $searchTerm) {
+                    $query->orWhere('activity', 'ILIKE', '%' . $searchTerm . '%');
+                    $query->orWhere('project', 'ILIKE', '%' . $searchTerm . '%');
+                    $query->orWhere('description', 'ILIKE', '%' . $searchTerm . '%');
+                }
+            });
+        }
+
         return view('activity.index')
-            ->withActivities(Activity::whereUserId($userId)->get());
+            ->withActivities($activities->get())
+            ->withFormData([
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'search_query' => $searchQuery,
+            ]);
     }
 
     /**
