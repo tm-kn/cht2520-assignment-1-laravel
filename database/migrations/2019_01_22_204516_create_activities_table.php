@@ -18,8 +18,8 @@ class CreateActivitiesTable extends Migration
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('activity');
-            $table->dateTimeTz('start_datetime');
-            $table->dateTimeTz('end_datetime')->nullable();
+            $table->dateTime('start_datetime');
+            $table->dateTime('end_datetime')->nullable();
             $table->string('project')->nullable();
             $table->text('description')->nullable();
         });
