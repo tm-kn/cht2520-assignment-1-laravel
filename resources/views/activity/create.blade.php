@@ -41,8 +41,7 @@
                     <label for="start_datetime" class="col-md-4 col-form-label text-md-right">{{ __('Start datetime') }}</label>
 
                     <div class="col-md-6">
-                        <input id="start_datetime" type="text" class="form-control{{ $errors->has('start_datetime') ? ' is-invalid' : '' }} datetimepicker-input js-datetime" name="start_datetime" value="{{ old('start_datetime') }}" required autofocus data-toggle="datetimepicker" data-target="#start_datetime">
-
+                        <input id="start_datetime" type="text" class="form-control{{ $errors->has('start_datetime') ? ' is-invalid' : '' }} datetimepicker-input js-datetime" name="start_datetime" value="{{ old('start_datetime', Carbon\Carbon::now()->toDateTimeString()) }}" required autofocus data-toggle="datetimepicker" data-target="#start_datetime">
                         @if ($errors->has('start_datetime'))
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('start_datetime') }}</strong>
