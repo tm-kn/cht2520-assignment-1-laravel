@@ -24,8 +24,8 @@ class FilterActivity extends FormRequest
     public function rules()
     {
         return [
-            'start_date' => 'date',
-            'end_date' => 'date',
+            'start_date' => 'date|nullable',
+            'end_date' => 'date|nullable',
             'search_query' => '',
         ];
     }

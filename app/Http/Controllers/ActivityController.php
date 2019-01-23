@@ -24,12 +24,12 @@ class ActivityController extends Controller
     {
         $validated = $request->validated();
         $startDate = Carbon::today()->subDays(7);
-        if(array_key_exists('start_date', $validated)) {
+        if(array_key_exists('start_date', $validated) && $validated['start_date'] !== null) {
             $startDate = new Carbon($validated['start_date']);
         }
 
         $endDate = Carbon::today();
-        if(array_key_exists('end_date', $validated)) {
+        if(array_key_exists('end_date', $validated) && $validated['end_date'] !== null) {
             $endDate = new Carbon($validated['end_date']);
         }
 
@@ -65,10 +65,10 @@ class ActivityController extends Controller
 
         return view('activity.index')
             ->withActivities($activities->get())
-            ->withFormData([
+            ->withFilters([
                 'start_date' => $startDate,
                 'end_date' => $endDate,
-                'search_query' => $searchQuery,
+                'search_query' => implode(' ', $searchQuery),
             ]);
     }
 

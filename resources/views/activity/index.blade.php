@@ -13,6 +13,16 @@
     </div>
     <div class="row">
         <div class="col">
+            <form method="get">
+                <input type="text" name="start_date" value="{{ $filters['start_date']->toDateString() }}">
+                <input type="text" name="end_date" placeholder="{{ __('End date') }}" value="{{ $filters['end_date']->toDateString() }}">
+                <input type="text" name="search_query" placeholder="{{ __('Search query') }}" value="{{ $filters['search_query'] }}">
+                <button class="btn btn-primary">Filter</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             @if($activities->isNotEmpty())
             <table class="table">
                 <thead>
