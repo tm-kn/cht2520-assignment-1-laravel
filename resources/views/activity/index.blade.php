@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <table class="activities-table">
+            <table class="table">
                 <thead>
                     <th>Time</th>
                     <th>Project</th>
@@ -17,9 +17,16 @@
                 </thead>
                 <tbody>
                 @foreach($activities as $activity)
+                    @if($loop->first || $activity->start_date != $activities[$loop->index - 1]->start_date)
+                    <tr>
+                        <td colspan="7">
+                            {{ $activity->start_date->toFormattedDateString() }}
+                        </td>
+                    </tr>
+                    @endif
                     <tr>
                         <td>
-                        {{ $activity->start_datetime }}{{ $activity->end_datetime ? ' - ' . $activity->end_datetime:'' }}
+                        {{ $activity->start_datetime->toTimeString() }}{{ $activity->end_datetime ? ' - ' . $activity->end_datetime->toTimeString() : '' }}
                         </td>
                         <td>{{ $activity->project }}</td>
                         <td>{{ $activity->activity }}</td>

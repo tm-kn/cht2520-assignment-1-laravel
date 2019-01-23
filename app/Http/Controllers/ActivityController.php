@@ -21,9 +21,8 @@ class ActivityController extends Controller
     public function index(Request $request)
     {
         $userId = $request->user()->id;
-        return view('activity.index')->withActivities(
-            Activity::whereUserId($userId)->get()
-        );
+        return view('activity.index')
+            ->withActivities(Activity::whereUserId($userId)->get());
     }
 
     /**
@@ -45,11 +44,11 @@ class ActivityController extends Controller
     public function store(StoreActivity $request)
     {
         $validated = $request->validated();
-
         $activity = new Activity($validated);
         $activity->user_id = $request->user()->id;
         $activity->save();
-        return redirect()->action('ActivityController@index')->with('success', 'Activity created successfully.');
+        return redirect()->action('ActivityController@index')
+                         ->withSuccess('Activity created successfully.');
     }
 
     /**
@@ -95,6 +94,7 @@ class ActivityController extends Controller
     public function destroy(Activity $activity)
     {
         $activity->delete();
-        return redirect()->action('ActivityController@index');
+        return redirect()->action('ActivityController@index')
+                         ->withSuccess('Activity has been deleted.');
     }
 }

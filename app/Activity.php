@@ -26,4 +26,8 @@ class Activity extends Model
         $end_datetime = $this->end_datetime ? $this->end_datetime : Carbon::now();
         return $end_datetime->diffAsCarbonInterval($this->start_datetime);
     }
+
+    public function getStartDateAttribute() {
+        return new Carbon($this->start_datetime->toDateString());
+    }
 }
