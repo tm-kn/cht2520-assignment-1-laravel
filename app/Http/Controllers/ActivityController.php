@@ -49,7 +49,7 @@ class ActivityController extends Controller
         $activity = new Activity($validated);
         $activity->user_id = $request->user()->id;
         $activity->save();
-        return back()->with('success', 'Activity created successfully.');
+        return redirect()->action('ActivityController@index')->with('success', 'Activity created successfully.');
     }
 
     /**
@@ -94,6 +94,7 @@ class ActivityController extends Controller
      */
     public function destroy(Activity $activity)
     {
-        //
+        $activity->delete();
+        return redirect()->action('ActivityController@index');
     }
 }
