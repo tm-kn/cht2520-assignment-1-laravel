@@ -41,7 +41,7 @@
                     <label for="start_datetime" class="col-md-4 col-form-label text-md-right">{{ __('Start datetime') }}</label>
 
                     <div class="col-md-6">
-                        <input id="start_datetime" type="text" class="form-control{{ $errors->has('start_datetime') ? ' is-invalid' : '' }}" name="start_datetime" value="{{ old('start_datetime') }}" required autofocus>
+                        <input id="start_datetime" type="text" class="form-control{{ $errors->has('start_datetime') ? ' is-invalid' : '' }} datetimepicker-input js-datetime" name="start_datetime" value="{{ old('start_datetime') }}" required autofocus data-toggle="datetimepicker" data-target="#start_datetime">
 
                         @if ($errors->has('start_datetime'))
                             <span class="invalid-feedback" role="alert">
@@ -56,7 +56,7 @@
                     <label for="end_datetime" class="col-md-4 col-form-label text-md-right">{{ __('End datetime') }}</label>
 
                     <div class="col-md-6">
-                        <input id="end_datetime" type="text" class="form-control{{ $errors->has('end_datetime') ? ' is-invalid' : '' }}" name="end_datetime" value="{{ old('end_datetime') }}" autofocus>
+                        <input id="end_datetime" type="text" class="form-control{{ $errors->has('end_datetime') ? ' is-invalid' : '' }} datetimepicker-input js-datetime" name="end_datetime" value="{{ old('end_datetime') }}" autofocus data-toggle="datetimepicker" data-target="#end_datetime">
 
                         @if ($errors->has('end_datetime'))
                             <span class="invalid-feedback" role="alert">
