@@ -2,24 +2,34 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row">
+        <div class="col">
+            <p>
+                <a href="{{ action('ActivityController@create') }}" class="btn btn-primary" role="button">
+                    {{ __('New activity') }}
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            @if($activities->isNotEmpty())
             <table class="table">
                 <thead>
-                    <th>Time</th>
-                    <th>Project</th>
-                    <th>Activity</th>
-                    <th>Time spent</th>
-                    <th>View</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                    <th>Stop</th>
+                    <th>{{ __('Time') }}</th>
+                    <th>{{ __('Project') }}</th>
+                    <th>{{ __('Activity') }}</th>
+                    <th>{{ __('Time spent') }}</th>
+                    <th>{{ __('View') }}</th>
+                    <th>{{ __('Edit') }}</th>
+                    <th>{{ __('Delete') }}</th>
+                    <th>{{ __('Stop') }}</th>
                 </thead>
                 <tbody>
                 @foreach($activities as $activity)
                     @if($loop->first || $activity->start_date != $activities[$loop->index - 1]->start_date)
                     <tr>
-                        <td colspan="7">
+                        <td colspan="8" class="font-weight-bold">
                             {{ $activity->start_date->toFormattedDateString() }}
                         </td>
                     </tr>
@@ -31,19 +41,37 @@
                         <td>{{ $activity->project }}</td>
                         <td>{{ $activity->activity }}</td>
                         <td>{{ $activity->duration }}</td>
-                        <td><a href="{{ action('ActivityController@show', $activity) }}">View</a></td>
-                        <td><a href="{{ action('ActivityController@edit', $activity) }}">Edit</a></td>
+                        <td>
+                            <p>
+                                <a class="btn btn-secondary" role="button" href="{{ action('ActivityController@show', $activity) }}">
+                                    {{ __('View') }}
+                                </a>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <a class="btn btn-secondary" role="button" href="{{ action('ActivityController@edit', $activity) }}">
+                                    {{ __('Edit') }}
+                                </a>
+                            </p>
+                        </td>
                         <td>
                             <form method="post"  action="{{ action('ActivityController@destroy', $activity) }}">
                                 <input type="hidden" name="_method" value="DELETE">
                                 @csrf
-                                <button class="btn btn-danger">Delete</button>
+                                <button class="btn btn-danger" role="button">{{ __('Delete') }}</button>
                             </form>
                         </td>
+                        <td></td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
+            @else
+            <div class="alert alert-primary" role="alert">
+                {{ __('No results found.') }}
+            </div>
+            @endif
         </div>
     </div>
 </div>
