@@ -23,6 +23,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return "Redirect to activities";
+        return redirect()->action('ActivityController@index');
     }
 }
