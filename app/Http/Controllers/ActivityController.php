@@ -51,7 +51,7 @@ class ActivityController extends Controller
         $activities = Activity::whereUserId($userId)
             ->orderBy('start_datetime', 'desc')
             ->where('start_datetime', '>=', $startDate->startOfDay())
-            ->where('end_datetime', '<=', $endDate->endOfDay());
+            ->where('start_datetime', '<=', $endDate->endOfDay());
 
         if($searchQuery) {
             $activities->where(function($query) use ($searchQuery) {
@@ -95,7 +95,7 @@ class ActivityController extends Controller
         $activity->user_id = $request->user()->id;
         $activity->save();
         return redirect()->action('ActivityController@index')
-                         ->withSuccess('Activity created successfully.');
+                         ->withSuccess(__('Activity created successfully.'));
     }
 
     /**
@@ -117,7 +117,7 @@ class ActivityController extends Controller
      */
     public function edit(Activity $activity)
     {
-        //
+        return view('activity.edit')->withActivity($activity);
     }
 
     /**
@@ -127,9 +127,13 @@ class ActivityController extends Controller
      * @param  \App\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Activity $activity)
+    public function update(StoreActivity $request, Activity $activity)
     {
-        //
+        $validated = $request->validated();
+        $activity->fill($validated);
+        $activity->save();
+        return back()->withSuccess(__('Activity updated successfully.'));
+
     }
 
     /**

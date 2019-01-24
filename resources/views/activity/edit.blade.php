@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            {!! Form::open(['action' => ['ActivityController@store']]) !!}
+            {!! Form::model($activity, ['method' => 'PATCH', 'action' => ['ActivityController@update', $activity]]) !!}
                 @include('activity.form')
 
                 <div class="form-group row mb-0">

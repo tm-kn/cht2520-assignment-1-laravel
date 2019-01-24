@@ -67,10 +67,10 @@
                         </td>
                         <td>
                             <form method="post"  action="{{ action('ActivityController@destroy', $activity) }}">
+                            {!! Form::open(['method' => 'DELETE', 'action' => ['ActivityController@destroy', $activity]]) !!}
                                 @method('DELETE')
-                                @csrf
-                                <button class="btn btn-danger" role="button">{{ __('Delete') }}</button>
-                            </form>
+                                {!! Form::submit(__('Delete'), ['class' => 'btn btn-danger']) !!}
+                            {!! Form::close() !!}
                         </td>
                         <td></td>
                     </tr>
