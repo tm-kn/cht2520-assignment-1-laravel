@@ -27,7 +27,7 @@ class StoreActivity extends FormRequest
             'activity' => 'required|max:255',
             'project' => 'required|max:255',
             'start_datetime' => 'required|date',
-            'end_datetime' => 'date|nullable',
+            'end_datetime' => 'date|nullable|after:start_datetime',
             'description' => '',
         ];
     }
