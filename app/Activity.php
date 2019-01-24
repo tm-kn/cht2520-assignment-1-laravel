@@ -30,4 +30,16 @@ class Activity extends Model
     public function getStartDateAttribute() {
         return new Carbon($this->start_datetime->toDateString());
     }
+
+    public function isActive() {
+        return $this->end_datetime === null;
+    }
+
+    public function stop() {
+        if (!$this->isActive()) {
+            throw Exception('Cannot stop inactive activity.');
+        }
+        $this->end_datetime = Carbon::now();
+        $this->save();
+    }
 }

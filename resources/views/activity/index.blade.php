@@ -66,13 +66,18 @@
                             </p>
                         </td>
                         <td>
-                            <form method="post"  action="{{ action('ActivityController@destroy', $activity) }}">
                             {!! Form::open(['method' => 'DELETE', 'action' => ['ActivityController@destroy', $activity]]) !!}
-                                @method('DELETE')
                                 {!! Form::submit(__('Delete'), ['class' => 'btn btn-danger']) !!}
                             {!! Form::close() !!}
                         </td>
-                        <td></td>
+
+                        <td>
+                            @if($activity->isActive())
+                            {!! Form::open(['action' => ['ActivityController@stop', $activity]]) !!}
+                                {!! Form::submit(__('Stop'), ['class' => 'btn btn-primary']) !!}
+                            {!! Form::close() !!}
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>

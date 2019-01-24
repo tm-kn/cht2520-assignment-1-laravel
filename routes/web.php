@@ -15,4 +15,5 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 
+Route::post('/activities/{activity}/stop', 'ActivityController@stop')->name('activities.stop');
 Route::resource('activities', 'ActivityController');

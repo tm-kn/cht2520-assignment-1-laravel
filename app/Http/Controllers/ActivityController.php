@@ -146,6 +146,11 @@ class ActivityController extends Controller
     {
         $activity->delete();
         return redirect()->action('ActivityController@index')
-                         ->withSuccess('Activity has been deleted.');
+                         ->withSuccess(__('Activity has been deleted.'));
+    }
+
+    public function stop(Activity $activity) {
+        $activity->stop();
+        return back()->withSuccess(__('Activity has been stopped.'));
     }
 }
