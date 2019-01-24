@@ -38,14 +38,16 @@
             @if($activities->isNotEmpty())
             <table class="table">
                 <thead>
-                    <th>{{ __('Time') }}</th>
-                    <th>{{ __('Project') }}</th>
-                    <th>{{ __('Activity') }}</th>
-                    <th>{{ __('Time spent') }}</th>
-                    <th>{{ __('View') }}</th>
-                    <th>{{ __('Edit') }}</th>
-                    <th>{{ __('Delete') }}</th>
-                    <th>{{ __('Stop') }}</th>
+                    <tr>
+                        <th>{{ __('Time') }}</th>
+                        <th>{{ __('Project') }}</th>
+                        <th>{{ __('Activity') }}</th>
+                        <th>{{ __('Time spent') }}</th>
+                        <th>{{ __('View') }}</th>
+                        <th>{{ __('Edit') }}</th>
+                        <th>{{ __('Delete') }}</th>
+                        <th>{{ __('Stop') }}</th>
+                    </tr>
                 </thead>
                 <tbody>
                 @foreach($activities as $activity)
