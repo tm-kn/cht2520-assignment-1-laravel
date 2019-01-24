@@ -13,12 +13,12 @@
     </div>
     <div class="row">
         <div class="col">
-            <form method="get">
-                <input type="text" name="start_date" value="{{ $filters['start_date']->toDateString() }}">
-                <input type="text" name="end_date" placeholder="{{ __('End date') }}" value="{{ $filters['end_date']->toDateString() }}">
-                <input type="text" name="search_query" placeholder="{{ __('Search query') }}" value="{{ $filters['search_query'] }}">
-                <button class="btn btn-primary">Filter</button>
-            </form>
+            {!! Form::open(['method' => 'GET']) !!}
+                {!! Form::text('start_date', $filters['start_date']->toDateString(), ['placeholder' => __('Start date')]) !!}
+                {!! Form::text('end_date', $filters['end_date']->toDateString(), ['placeholder' => __('End date')]) !!}
+                {!! Form::text('search_query', $filters['search_query'], ['placeholder' => __('Search query')]) !!}
+                {!! Form::submit(__('Filter'), ['class' => 'btn btn-primary']) !!}
+            {!! Form::close() !!}
         </div>
     </div>
     <div class="row">
