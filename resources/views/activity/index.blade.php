@@ -67,7 +67,7 @@
                         </td>
                         <td>
                             <form method="post"  action="{{ action('ActivityController@destroy', $activity) }}">
-                                <input type="hidden" name="_method" value="DELETE">
+                                @method('DELETE')
                                 @csrf
                                 <button class="btn btn-danger" role="button">{{ __('Delete') }}</button>
                             </form>
