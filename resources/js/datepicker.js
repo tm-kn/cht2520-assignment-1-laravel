@@ -9,4 +9,11 @@ $(function () {
             date: value ? window.moment(value) : undefined,
         });
     });
+    $('.js-date').each(function () {
+        var value = $(this).val().trim();
+        $(this).datetimepicker({
+            format: 'YYYY-MM-DD',
+            date: value ? value : undefined,
+        });
+    });
 });

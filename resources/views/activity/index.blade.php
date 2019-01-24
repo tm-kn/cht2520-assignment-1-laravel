@@ -14,8 +14,20 @@
     <div class="row">
         <div class="col">
             {!! Form::open(['method' => 'GET']) !!}
-                {!! Form::text('start_date', $filters['start_date']->toDateString(), ['placeholder' => __('Start date')]) !!}
-                {!! Form::text('end_date', $filters['end_date']->toDateString(), ['placeholder' => __('End date')]) !!}
+                {!! Form::text('start_date', $filters['start_date']->toDateString(), [
+                    'class' => 'datetimepicker-input js-date',
+                    'placeholder' => __('Start date'),
+                    'data-toggle' => "datetimepicker",
+                    'data-target' => "#start_date",
+                    'id' => 'start_date',
+                ]) !!}
+                {!! Form::text('end_date', $filters['end_date']->toDateString(), [
+                    'class' => 'datetimepicker-input js-date',
+                    'placeholder' => __('End date'),
+                    'data-toggle' => "datetimepicker",
+                    'data-target' => "#end_date",
+                    'id' => 'end_date',
+                ]) !!}
                 {!! Form::text('search_query', $filters['search_query'], ['placeholder' => __('Search query')]) !!}
                 {!! Form::submit(__('Filter'), ['class' => 'btn btn-primary']) !!}
             {!! Form::close() !!}
