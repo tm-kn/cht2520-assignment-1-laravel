@@ -27,4 +27,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Get user's activities.
+     */
+    public function activities()
+    {
+        return $this->hasMany('App\Activity');
+    }
 }

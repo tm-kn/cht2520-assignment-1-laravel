@@ -24,21 +24,30 @@ class ActivityController extends Controller
     public function index(FilterActivity $request)
     {
         $validated = $request->validated();
+
+        // Calculate default start date.
         $startDate = Carbon::today()->subDays(7);
-        if (array_key_exists('start_date', $validated) && $validated['start_date'] !== null) {
+
+        if (array_key_exists('start_date', $validated) && !is_null($validated['start_date'])) {
+            // Take start date from the user input.
             $startDate = new Carbon($validated['start_date']);
         }
 
+        // Set default end date.
         $endDate = Carbon::today();
-        if (array_key_exists('end_date', $validated) && $validated['end_date'] !== null) {
+
+        if (array_key_exists('end_date', $validated) && !is_null($validated['end_date'])) {
+            // Take end date from the user input.
             $endDate = new Carbon($validated['end_date']);
         }
 
+        // Get serach query from the user input.
         $searchQuery = [];
         if (array_key_exists('search_query', $validated)) {
             $searchQuery = explode(" ", $validated['search_query']);
         }
 
+        // If start date occurs before end date, swap them around.
         $startDate->startOfDay();
         $endDate->endOfDay();
         if ($startDate > $endDate) {
@@ -47,11 +56,15 @@ class ActivityController extends Controller
             $endDate = $tmpStartDate;
         }
 
-        $activities = Activity::whereUserId($request->user()->id)
+        // Display activities only created by current user.
+        // And filter by the start and end date.
+        $activities = $request->user()->activities()
             ->orderBy('start_datetime', 'desc')
             ->where('start_datetime', '>=', $startDate->startOfDay())
             ->where('start_datetime', '<=', $endDate->endOfDay());
 
+        // If search query is not empty, put together a query looking for the
+        // keywords.
         if ($searchQuery) {
             $activities->where(function ($query) use ($searchQuery) {
                 foreach ($searchQuery as $searchTerm) {
@@ -62,6 +75,7 @@ class ActivityController extends Controller
             });
         }
 
+        // Return the index view the list of activities and set filters.
         return view('activity.index')
             ->withActivities($activities->get())
             ->withFilters([
@@ -91,7 +105,7 @@ class ActivityController extends Controller
     {
         $validated = $request->validated();
         $activity = new Activity($validated);
-        $activity->user_id = $request->user()->id;
+        $activity->user()->associate($request->user());
         $activity->save();
         return redirect()->action('ActivityController@index')
                          ->withSuccess(__('Activity created successfully.'));
