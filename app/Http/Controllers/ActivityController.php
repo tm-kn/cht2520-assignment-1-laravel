@@ -39,8 +39,6 @@ class ActivityController extends Controller
             $searchQuery = explode(" ", $validated['search_query']);
         }
 
-        $userId = $request->user()->id;
-
         $startDate->startOfDay();
         $endDate->endOfDay();
         if ($startDate > $endDate) {
@@ -49,7 +47,7 @@ class ActivityController extends Controller
             $endDate = $tmpStartDate;
         }
 
-        $activities = Activity::whereUserId($userId)
+        $activities = Activity::whereUserId($request->user()->id)
             ->orderBy('start_datetime', 'desc')
             ->where('start_datetime', '>=', $startDate->startOfDay())
             ->where('start_datetime', '<=', $endDate->endOfDay());
@@ -108,9 +106,7 @@ class ActivityController extends Controller
      */
     public function show(Request $request, Activity $activity)
     {
-        if ($activity->user != $request->user()) {
-            abort(404);
-        }
+        $this->authorizeActionOnActivity($request, $activity);
         return view('activity.show')->withActivity($activity);
     }
 
@@ -123,9 +119,7 @@ class ActivityController extends Controller
      */
     public function edit(Request $request, Activity $activity)
     {
-        if ($activity->user != $request->user()) {
-            abort(404);
-        }
+        $this->authorizeActionOnActivity($request, $activity);
         return view('activity.edit')->withActivity($activity);
     }
 
@@ -138,6 +132,7 @@ class ActivityController extends Controller
      */
     public function update(StoreActivity $request, Activity $activity)
     {
+        $this->authorizeActionOnActivity($request, $activity);
         $validated = $request->validated();
         $activity->fill($validated);
         $activity->save();
@@ -153,9 +148,7 @@ class ActivityController extends Controller
      */
     public function destroy(Request $request, Activity $activity)
     {
-        if ($activity->user != $request->user()) {
-            abort(404);
-        }
+        $this->authorizeActionOnActivity($request, $activity);
         $activity->delete();
         return redirect()->action('ActivityController@index')
                          ->withSuccess(__('Activity has been deleted.'));
@@ -170,10 +163,21 @@ class ActivityController extends Controller
      */
     public function stop(Request $request, Activity $activity)
     {
+        $this->authorizeActionOnActivity($request, $activity);
+        $activity->stop();
+        return back()->withSuccess(__('Activity has been stopped.'));
+    }
+
+    /**
+     * Check if user can perform an action on the activity object.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param \App\Activity  $activity
+     */
+    protected function authorizeActionOnActivity($request, $activity)
+    {
         if ($activity->user != $request->user()) {
             abort(404);
         }
-        $activity->stop();
-        return back()->withSuccess(__('Activity has been stopped.'));
     }
 }
