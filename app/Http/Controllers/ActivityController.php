@@ -18,23 +18,24 @@ class ActivityController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param \App\Http\Requests\FilterActivity    $request
      * @return \Illuminate\Http\Response
      */
     public function index(FilterActivity $request)
     {
         $validated = $request->validated();
         $startDate = Carbon::today()->subDays(7);
-        if(array_key_exists('start_date', $validated) && $validated['start_date'] !== null) {
+        if (array_key_exists('start_date', $validated) && $validated['start_date'] !== null) {
             $startDate = new Carbon($validated['start_date']);
         }
 
         $endDate = Carbon::today();
-        if(array_key_exists('end_date', $validated) && $validated['end_date'] !== null) {
+        if (array_key_exists('end_date', $validated) && $validated['end_date'] !== null) {
             $endDate = new Carbon($validated['end_date']);
         }
 
         $searchQuery = [];
-        if(array_key_exists('search_query', $validated)) {
+        if (array_key_exists('search_query', $validated)) {
             $searchQuery = explode(" ", $validated['search_query']);
         }
 
@@ -53,9 +54,9 @@ class ActivityController extends Controller
             ->where('start_datetime', '>=', $startDate->startOfDay())
             ->where('start_datetime', '<=', $endDate->endOfDay());
 
-        if($searchQuery) {
-            $activities->where(function($query) use ($searchQuery) {
-                foreach($searchQuery as $searchTerm) {
+        if ($searchQuery) {
+            $activities->where(function ($query) use ($searchQuery) {
+                foreach ($searchQuery as $searchTerm) {
                     $query->orWhere('activity', 'ILIKE', '%' . $searchTerm . '%');
                     $query->orWhere('project', 'ILIKE', '%' . $searchTerm . '%');
                     $query->orWhere('description', 'ILIKE', '%' . $searchTerm . '%');
@@ -85,7 +86,7 @@ class ActivityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreActivity  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreActivity $request)
@@ -102,28 +103,36 @@ class ActivityController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Activity  $activity
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show(Activity $activity)
+    public function show(Request $request, Activity $activity)
     {
+        if ($activity->user != $request->user()) {
+            abort(404);
+        }
         return view('activity.show')->withActivity($activity);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function edit(Activity $activity)
+    public function edit(Request $request, Activity $activity)
     {
+        if ($activity->user != $request->user()) {
+            abort(404);
+        }
         return view('activity.edit')->withActivity($activity);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreActivity  $request
      * @param  \App\Activity  $activity
      * @return \Illuminate\Http\Response
      */
@@ -133,23 +142,37 @@ class ActivityController extends Controller
         $activity->fill($validated);
         $activity->save();
         return back()->withSuccess(__('Activity updated successfully.'));
-
     }
 
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Activity  $activity
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Activity $activity)
+    public function destroy(Request $request, Activity $activity)
     {
+        if ($activity->user != $request->user()) {
+            abort(404);
+        }
         $activity->delete();
         return redirect()->action('ActivityController@index')
                          ->withSuccess(__('Activity has been deleted.'));
     }
 
-    public function stop(Activity $activity) {
+    /**
+     * Stop the activity.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Activity  $activity
+     * @return \Illuminate\Http\Response
+     */
+    public function stop(Request $request, Activity $activity)
+    {
+        if ($activity->user != $request->user()) {
+            abort(404);
+        }
         $activity->stop();
         return back()->withSuccess(__('Activity has been stopped.'));
     }
